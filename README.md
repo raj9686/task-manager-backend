@@ -36,10 +36,6 @@ Finally, start the server using:
 npm run start:dev
 ```
 
-### API Documentation
-
-For detailed documentation on the API endpoints and how to use them, refer to the [API documentation](docs/api.md).
-
 ### Contribution
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
