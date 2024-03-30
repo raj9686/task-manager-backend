@@ -3,7 +3,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
 import { TasksModule } from './tasks/task.module';
-console.log('configService', JSON.stringify(AppConfigService, null, 2));
+import * as mongoose from 'mongoose';
+
+// somewhere in your code
+mongoose.set('debug', true);
 @Module({
   imports: [
     AppConfigModule,

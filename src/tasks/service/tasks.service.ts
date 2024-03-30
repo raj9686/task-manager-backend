@@ -1,32 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Task, TaskDocument } from '../model/task.schema';
 import { Model } from 'mongoose';
-import { Task } from '../model/task.model';
-
 @Injectable()
 export class TasksService {
-  constructor(@InjectModel('Task') private readonly taskModel: Model<Task>) {}
+  constructor(
+    @InjectModel(Task.name)
+    private readonly taskModel: Model<TaskDocument>,
+  ) {}
 
-  async getAllTasks(): Promise<Task[]> {
-    return this.taskModel.find().sort({ createdAt: -1 }).exec();
+  async getAllTasks(status: string): Promise<Task[]> {
+    const q = status === 'All' ? {} : { status };
+    return this.taskModel.aggregate([
+      {
+        $match: q,
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
   }
 
   async createTask(task: Task): Promise<Task> {
-    const newTask = new this.taskModel(task);
-    return newTask.save();
+    return this.taskModel.create(task);
   }
 
   async updateTask(id: string, updatedTask: Task): Promise<Task> {
-    return this.taskModel
-      .findByIdAndUpdate(id, updatedTask, { new: true })
-      .exec();
+    return this.taskModel.findByIdAndUpdate(id, updatedTask, { new: true });
   }
 
   async deleteTask(id: string): Promise<void> {
-    await this.taskModel.findByIdAndDelete(id).exec();
+    await this.taskModel.findByIdAndDelete(id);
   }
 
   async getTaskById(id: string): Promise<Task> {
-    return this.taskModel.findById(id).exec();
+    return this.taskModel.findById(id);
   }
 }

@@ -6,17 +6,18 @@ import {
   Delete,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from '../service/tasks.service';
-import { Task } from '../model/task.model';
+import { Task } from '../model/task.schema';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  async getAllTasks(): Promise<Task[]> {
-    return this.tasksService.getAllTasks();
+  async getAllTasks(@Query('status') status: string): Promise<Task[]> {
+    return this.tasksService.getAllTasks(status);
   }
 
   @Post()
